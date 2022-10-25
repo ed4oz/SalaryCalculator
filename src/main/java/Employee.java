@@ -1,3 +1,5 @@
+import java.util.List;
+
 public class Employee {
     //I did private fields access modifiers for encapsulation.
     private String name;
@@ -5,11 +7,16 @@ public class Employee {
     private int workHours;
     private int hireYear;
 
-    public Employee(String name, double salary, int workHours, int hireYear) {
+    private List<Integer> monthlyWorkHours;
+
+    public Employee(String name, double salary, int workHours, int hireYear, List<Integer> monthlyWorkHours
+    ) {
         this.name = name;
         this.salary = salary;
         this.workHours = workHours;
         this.hireYear = hireYear;
+        this.monthlyWorkHours = monthlyWorkHours;
+
     }
 
     //We can access fields by setter and getter.
@@ -44,6 +51,13 @@ public class Employee {
     public void setHireYear(int hireYear) {
         this.hireYear = hireYear;
     }
+    public List<Integer> getWorkHour() {
+        return monthlyWorkHours;
+    }
+
+    public void setWorkHour(List<Integer> workHour) {
+        this.monthlyWorkHours = workHour;
+    }
 
 
     public double tax() {
@@ -56,6 +70,7 @@ public class Employee {
         return tax;
     }
 
+    //Weekly bonus calculate
     public double bonus() {
         double bonus;
         if (workHours > 40) {
@@ -68,28 +83,42 @@ public class Employee {
         return bonus;
     }
 
+    //Montly bonus calculate
+    public double monthlyBonus() {
+        double bonus = 0;
+        int extraHours = 0;
+
+        for (Integer item : monthlyWorkHours) {
+            if (item > 40) {
+                extraHours = extraHours + (item - 40);
+            }
+        }
+        bonus = extraHours * 30;
+        return bonus;
+    }
+
     //I used with bonus and tax, when I calculated raise salary.
     public double raiseSalary() {
         double raiseSalary = 0;
         int totalYear = 2021 - hireYear;
         if (totalYear < 10) {
-            raiseSalary = (salary + bonus() - tax()) * 0.05;
+            raiseSalary = (salary + monthlyBonus() - tax()) * 0.05;
         } else if (totalYear > 9 && totalYear < 20) {
-            raiseSalary = (salary + bonus() - tax()) * 0.1;
+            raiseSalary = (salary + monthlyBonus() - tax()) * 0.1;
         } else if (totalYear > 19) {
-            raiseSalary = (salary + bonus() - tax()) * 0.15;
+            raiseSalary = (salary + monthlyBonus() - tax()) * 0.15;
         }
         return raiseSalary;
     }
 
     // total salary = salary + increase of salary + bonus
     public double totalSalary() {
-        double total = salary + raiseSalary() + bonus();
+        double total = salary + raiseSalary() + monthlyBonus();
         return total;
     }
 
     public double netSalary(){
-        double netSalary = salary - tax() + bonus();
+        double netSalary = salary - tax() + monthlyBonus();
         return netSalary;
     }
 
@@ -100,6 +129,7 @@ public class Employee {
                 ", salary=" + salary +
                 ", workHours=" + workHours +
                 ", hireYear=" + hireYear +
+                ", monthlyWorkHours=" + monthlyWorkHours +
                 '}';
     }
 }
